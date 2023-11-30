@@ -93,12 +93,27 @@ struct Player {
             && currentHealth > 0
             && (isPlayer() || isDummie());
     }
+    void MapRadar(ConfigLoader* cl, MyDisplay* m_disp) {
+        if (m_disp->keyDown(cl->FEATURE_MAP_RADAR_BUTTON) && cl->FEATURE_MAP_RADAR_ON) {
+            uintptr_t pLocal = mem::Read<uintptr_t>(OFF_REGION + OFF_LOCAL_PLAYER);
 
+            int currentTEAM = mem::Read<int>(pLocal + OFF_TEAM_NUMBER);
+
+            for (uintptr_t i = 0; i <= 80000; i++)
+            {
+            mem::Write<int>(pLocal + OFF_TEAM_NUMBER, 1);
+            }
+            for (uintptr_t i = 0; i <= 80000; i++)
+            {
+            mem::Write<int>(pLocal + OFF_TEAM_NUMBER, currentTEAM);
+            } 
+        }
+    }
     bool isCombatReady() {
         if (!isValid())return false;
         if (isDummie()) return true;
         if (dead) return false;
-        if (knocked) return false;
+        if (knocked) return true;
         return true;
     }
 

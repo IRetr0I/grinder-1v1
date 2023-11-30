@@ -9,7 +9,7 @@ int main() {
     if (mem::GetPID() == 0) { std::cout << "OPEN THE GAME FIRST!\n"; return -1; }
 
     //create basic objects
-    XDisplay* display = new XDisplay();
+    MyDisplay* display = new MyDisplay();
     Level* level = new Level();
     LocalPlayer* localPlayer = new LocalPlayer();
     std::vector<Player*>* humanPlayers = new std::vector<Player*>;
@@ -20,10 +20,9 @@ int main() {
     for (int i = 0; i < 70; i++) humanPlayers->push_back(new Player(i, localPlayer));
     for (int i = 0; i < 15000; i++) dummyPlayers->push_back(new Player(i, localPlayer));
 
-    //create features     
-    NoRecoil* noRecoil = new NoRecoil(cl, display, level, localPlayer);
+    //create features        
     AimBot* aimBot = new AimBot(cl, display, level, localPlayer, players);
-    TriggerBot* triggerBot = new TriggerBot(cl, display, level, localPlayer, players);
+    //TriggerBot* triggerBot = new TriggerBot(cl, display, level, localPlayer, players);
     Sense* sense = new Sense(cl, display, level, localPlayer, players);
 
     //begin main loop
@@ -61,11 +60,11 @@ int main() {
                     Player* p = humanPlayers->at(i);
                     p->readFromMemory();
                     if (p->isValid()) players->push_back(p);
+                    p->MapRadar(cl, display);
                 }
 
-            //run features       
-            noRecoil->controlWeapon(counter);
-            triggerBot->shootAtEnemy();
+            //run features                
+            //triggerBot->shootAtEnemy();
             aimBot->aimAssist(counter);
             sense->modifyHighlights();
             sense->glowPlayers();
